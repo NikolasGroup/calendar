@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Calendar</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <link href="css/style.css" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="calendar_top">
+            <div class="work-area">
+                <div class="calendar_top__button">
+                    <a class="btn_blue">Добавить</a>
+                    <a class="btn_blue">Обновить</a>
+                </div>
+                <div class="calendar_top__search">
+                    <input type="text" id="search" placeholder="Событие, дата или участник">
+                </div>
+            </div>
+        </div>
+        <div class="calendar_bottom">
+            <div class="work-area">
+                <div class="calendar_bottom__month">
+                    <a id="prev" class="arrow"></a><span id="monthName"></span><a id="next" class="arrow"></a><a id="today">Сегодня</a>
+                </div>
+                <div class="calendar_bottom__body"></div>
+            </div>
+        </div>
+        
+        <script type='text/javascript' language="javascript" src='js/jquery-1.10.1.min.js'></script>
+        <script type='text/javascript' language="javascript" src='js/jquery.maskedinput.min.js'></script>
+        <script type='text/javascript' language="javascript" src='js/script.js'></script>
+    </body>
+</html>
