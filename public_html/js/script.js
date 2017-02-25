@@ -89,7 +89,12 @@
         $('body').on('click','#closeForm',function(){            
             $('#addForm').remove();
             $('.day').removeClass('open');
+            $('#addForm_quick').remove();
             return false;
+        });
+        
+        $('.quicklyAdd').on('click',function(){
+            createQuickForm();
         });
     });
 })();
@@ -132,6 +137,7 @@ function createForm(a){
     
     $('#addForm').remove();
     $('.day').removeClass('open');
+    $('#addForm_quick').remove();
     
     $this.addClass('open');
     
@@ -172,7 +178,7 @@ function newEvent(a,leftRight,topBottom){
                     <input type="text" name="dateEvent">\n\
                     <input type="text" name="personsEvent" placeholder="Имена участников">\n\
                     <textarea placeholder="Описание"></textarea>\n\
-                    <button onclick="addEvent(this)">Готово</button><button onclick="delEvent(this)">Удалить</button>\n\
+                    <button onclick="addEvent(this);return false;">Готово</button><button onclick="delEvent(this);return false;">Удалить</button>\n\
                 </form>';
     
     $this.append(form);
@@ -194,7 +200,7 @@ function editEvent(a,leftRight,topBottom){
                     <p class="dateEvent">'+parseInt(date[0])+' '+monthText+'</p>\n\
                     <p class="personsEvent"><span>Участники:</span>'+person+'</p>\n\
                     <textarea placeholder="Описание">'+description+'</textarea>\n\
-                    <button onclick="editDiscriptionEvent(this)">Готово</button><button onclick="delEvent(this)">Удалить</button>\n\
+                    <button onclick="editDiscriptionEvent(this);return false;">Готово</button><button onclick="delEvent(this);return false;">Удалить</button>\n\
                 </form>';
     
     $this.append(form);
@@ -217,6 +223,7 @@ function addEvent(a){
     
     $('#addForm').remove();
     $('.day').removeClass('open');
+    $('#addForm_quick').remove();
     return false;
 }
 function delEvent(a){
@@ -229,5 +236,47 @@ function delEvent(a){
     
     $('#addForm').remove();
     $('.day').removeClass('open');
+    $('#addForm_quick').remove();
     return false;
+}
+
+function createQuickForm(){
+    $('#addForm').remove();
+    $('.day').removeClass('open');
+    $('#addForm_quick').remove();
+    
+    var form = '<form id="addForm_quick">\n\
+                    <a id="closeForm"></a>\n\
+                    <input type="text" name="quicEvent" placeholder="01.03, День рождения">\n\
+                    <button onclick="addQuickEvent(this);return false;">Создать</button>\n\
+                </form>';
+    
+    $('.calendar_top__button').append(form);
+}
+function addQuickEvent(a){
+    var $form = $(a).closest('form');
+    
+    var text = $form.find('input').val();
+    text = text.split(',');
+    
+    var date = text[0];
+    var name = text[1];
+
+    if(date == undefined || name == undefined){
+        $form.find('input').addClass('error').after('<span class="error_msg">Формат ввода должен быть: 01.01, Название события</span>');
+        return false;
+    }
+    var today = new Date(),
+        thisYear = today.getFullYear();
+    date = date + '.' + thisYear;
+
+    var event = '<div class="event">\n\
+                    <p class="event__name">'+name+'</p>\n\
+                    <p class="event__person"></p>\n\
+                    <p class="event__description"></p>\n\
+                </div>';
+    
+    $('.calendar_bottom__body').find('.day[data-date="'+date+'"]').addClass('day_event').append(event);
+    
+    $('#addForm_quick').remove();
 }

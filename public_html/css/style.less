@@ -26,7 +26,8 @@ a{
         width: 100%;
         display: inline-block;
         &__button{
-            float: left;            
+            float: left;    
+            position: relative;
         }
         &__search{
             float: right;
@@ -100,6 +101,10 @@ a{
     text-align: center;
     &:hover{
         background: #0568b9;
+    }
+    &:active{
+        background: #005ba6;
+        color:#b0c1d9;
     }
 }
 input:not([type=submit]),
@@ -252,5 +257,58 @@ textarea{
         display: block;
         background-size: contain;
         background-repeat: no-repeat;
+    }
+}
+
+#addForm_quick{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 16px;
+    width: 303px;
+    box-sizing: border-box;
+    padding: 24px 22px;
+    background: #FFF;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 2;
+    &:before{
+        content: '';
+        position: absolute;
+        left: 21px;
+        top: -11px;
+        width: 19px;
+        height: 11px;
+        background: url('../images/arrow_top.png');
+    }
+    #closeForm{
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 7px;
+        height: 7px;
+        background-image: url('../images/close.png');
+        display: block;
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+    button{
+        cursor: pointer;
+        border-radius: 3px;
+        border: 1px solid #aeaeae;
+        background: #FFF;
+        margin-top: 11px;
+        font-size: 11px;
+        font-family: 'Open Sans',Arial,sans-serif;
+        outline: 0;
+        padding: 2px 9px;
+    }
+    .error{
+        border-color: red;
+    }
+    .error_msg{
+        color:red;
+        font-size: 10px;
+        margin: 5px 0;
+        display: block;
     }
 }
