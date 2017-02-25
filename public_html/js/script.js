@@ -80,7 +80,15 @@
         $('.calendar_bottom__body').find('.day:nth-child('+6+')').find('span').prepend('Суббота, ');
         $('.calendar_bottom__body').find('.day:nth-child('+7+')').find('span').prepend('Воскресенье, ');
 
-        $('.calendar_bottom__body').find('.day[data-date="'+today.getDate()+'.'+(prevMonth+1)+'.'+thisYear+'"]').addClass('today');
+        var day = today.getDate();
+        if(day<10){
+            day = '0' + day;
+        }
+        var month = prevMonth+1;
+        if(month<10){
+            month = '0' + month;
+        }
+        $('.calendar_bottom__body').find('.day[data-date="'+day+'.'+month+'.'+thisYear+'"]').addClass('today');
     
         $('body').on('click','.day',function(){            
             createForm(this);                        
@@ -96,6 +104,8 @@
         $('.quicklyAdd').on('click',function(){
             createQuickForm();
         });
+        
+        getLocalStorage();
     });
 })();
 
@@ -205,6 +215,20 @@ function editEvent(a,leftRight,topBottom){
     
     $this.append(form);
 }
+function editDiscriptionEvent(a){
+    var $form = $(a).closest('form');
+    var $this = $form.closest('.day');
+    var description = $form.find('textarea').val();
+    
+    $this.find('.event__description').html(description);
+    
+    updateLocalStorage($this.data('date'),description);
+    
+    $('#addForm').remove();
+    $('.day').removeClass('open');
+    $('#addForm_quick').remove();
+    return false;
+}
 function addEvent(a){
     var $form = $(a).closest('form');
     if( $form.find('input[name=nameEvent]').val() == '' ){
@@ -220,6 +244,14 @@ function addEvent(a){
     var date = $form.find('input[name=dateEvent]').val();
     
     $('.calendar_bottom__body').find('.day[data-date="'+date+'"]').addClass('day_event').append(event);
+    
+    var event = {
+        'date' : ''+date+'',
+        'name' : ''+$form.find('input[name=nameEvent]').val()+'',
+        'person' : ''+$form.find('input[name=personsEvent]').val()+'',
+        'description' : ''+$form.find('textarea').val()+''
+    };
+    setLocalStorage(event);
     
     $('#addForm').remove();
     $('.day').removeClass('open');
@@ -237,6 +269,8 @@ function delEvent(a){
     $('#addForm').remove();
     $('.day').removeClass('open');
     $('#addForm_quick').remove();
+    
+    deleteEventLocalStorage(date);
     return false;
 }
 
@@ -278,5 +312,63 @@ function addQuickEvent(a){
     
     $('.calendar_bottom__body').find('.day[data-date="'+date+'"]').addClass('day_event').append(event);
     
+    var event = {
+        'date' : ''+date+'',
+        'name' : ''+name+'',
+        'person' : '',
+        'description' : ''
+    };
+    setLocalStorage(event);
+    
     $('#addForm_quick').remove();
+}
+//var obj = '{\
+//                "events":[\
+//                    {"name":"Напиться!","date":"11.02.2017","person":"Витя Костин, Петр Михайлов","description":""},\
+//                    {"name":"ДР!","date":"24.02.2017","person":"Дима молодцов","description":""}\
+//                ]\
+//            }';
+//localStorage.setItem("Events", obj);
+                                                
+var returnObj = {};
+function getLocalStorage(){
+    returnObj = JSON.parse(localStorage.getItem("Events"));
+    $.each(returnObj.events,function(){
+        var event = '<div class="event">\n\
+                        <p class="event__name">'+this.name+'</p>\n\
+                        <p class="event__person">'+this.person+'</p>\n\
+                        <p class="event__description">'+this.description+'</p>\n\
+                    </div>';
+    
+        var date = this.date;
+    
+        $('.calendar_bottom__body').find('.day[data-date="'+date+'"]').addClass('day_event').append(event);
+    });
+}
+function setLocalStorage(event){
+    var str = JSON.stringify(event);
+    str = JSON.parse(str);
+    returnObj.events.push(str);
+    var serialObj = JSON.stringify(returnObj);
+    localStorage.setItem("Events", serialObj);
+}
+function deleteEventLocalStorage(date) {
+    var i = 0;
+    $.each(returnObj.events,function(){
+        if(this.date === date)
+            return false;
+        i++;
+    });    
+    returnObj.events.splice(i,1);
+    var serialObj = JSON.stringify(returnObj);
+    localStorage.setItem("Events", serialObj);
+};
+function updateLocalStorage(date,description){
+    $.each(returnObj.events,function(){
+        if(this.date === date){
+            this.description = description;
+        }            
+    });    
+    var serialObj = JSON.stringify(returnObj);
+    localStorage.setItem("Events", serialObj);
 }
